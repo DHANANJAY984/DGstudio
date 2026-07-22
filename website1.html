@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simple Responsive Website</title>
+  <meta name="description" content="A clean responsive single-file website with CSS and a tiny JS for interaction." />
+
+  <!-- Embedded CSS: change variables at the top to customize colors/spacing -->
+  <style>
+    :root{
+      --bg: #0f1724;         /* page background */
+      --card: #0b1220;       /* card background */
+      --muted: #94a3b8;      /* muted text */
+      --accent: #06b6d4;     /* primary accent */
+      --glass: rgba(255,255,255,0.03);
+      --radius: 12px;
+      --max-width: 1100px;
+      --ff: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--ff);
+      background:linear-gradient(180deg, #071025 0%, #08121b 50%), var(--bg);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      padding:32px 16px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .site{
+      width:100%;
+      max-width:var(--max-width);
+      background:transparent;
+    }
+
+    /* HEADER / NAV */
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:28px;
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:inline-grid;place-items:center;font-weight:700;color:#001018
+    }
+    nav{display:flex;gap:18px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-weight:600}
+    nav a:hover{color:var(--accent)}
+
+    .cta{
+      background:linear-gradient(90deg,var(--accent),#7c3aed);
+      color:#001018;padding:10px 14px;border-radius:10px;font-weight:700;text-decoration:none
+    }
+
+    /* HERO */
+    .hero{
+      display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-bottom:36px;
+    }
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:var(--radius);box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    h1{font-size:clamp(26px,4vw,40px);margin:0 0 8px}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    .feature-list{display:flex;gap:10px;flex-wrap:wrap}
+    .feature{background:var(--glass);padding:8px 12px;border-radius:10px;font-weight:600;color:var(--muted)}
+
+    /* CARDS GRID */
+    .grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:36px
+    }
+    .card{background:var(--card);padding:18px;border-radius:14px}
+    .card h3{margin:0 0 8px}
+    .card p{color:var(--muted);margin:0}
+
+    /* CONTACT */
+    .contact{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px}
+    form{display:grid;gap:10px}
+    input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:8px;color:inherit}
+    input:focus,textarea:focus{outline:2px solid rgba(6,182,212,0.16);border-color:var(--accent)}
+    button{background:var(--accent);border:none;color:#001018;padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+
+    footer{color:var(--muted);text-align:center;padding:28px 0}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr 1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:680px){
+      header{align-items:flex-start;gap:8px}
+      nav{display:none}
+      .hero{grid-template-columns:1fr;}
+      .grid{grid-template-columns:1fr}
+      body{padding:18px}
+      .mobile-nav-btn{display:inline-block}
+    }
+
+    /* Mobile nav button */
+    .mobile-nav-btn{display:none;background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px}
+    .mobile-nav-sheet{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6)}
+    .mobile-nav-sheet .panel{background:#071427;padding:20px;border-radius:12px;width:90%;max-width:320px}
+    .mobile-nav-sheet a{display:block;padding:10px 6px;border-radius:8px;color:var(--muted);text-decoration:none}
+    .mobile-nav-sheet a:hover{color:var(--accent)}
+
+  </style>
+</head>
+<body>
+  <div class="site">
+
+    <header>
+      <a class="brand" href="#">
+        <div class="logo">DG</div>
+        <div>
+          <div style="font-weight:800">DG Studio</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Simple modern template</div>
+        </div>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+        <a class="cta" href="#contact">Get started</a>
+      </nav>
+
+      <button class="mobile-nav-btn" id="openNav" aria-expanded="false">Menu</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-card">
+          <h1>Beautiful, responsive website — single file</h1>
+          <p class="lead">A starter HTML + CSS template you can copy and use. Clean, accessible, and easy to customize. Perfect for portfolios, small businesses, or landing pages.</p>
+
+          <div class="feature-list">
+            <div class="feature">Responsive</div>
+            <div class="feature">Accessible</div>
+            <div class="feature">Lightweight</div>
+            <div class="feature">Customizable</div>
+          </div>
+
+          <div style="margin-top:18px;display:flex;gap:10px">
+            <a class="cta" href="#contact">Contact</a>
+            <a style="padding:10px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);text-decoration:none;color:var(--muted);font-weight:700" href="#work">See work</a>
+          </div>
+        </div>
+
+        <aside style="padding:8px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));">
+          <div style="padding:18px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);">
+            <h3 style="margin:0 0 8px">Quick info</h3>
+            <p style="margin:0 0 12px;color:var(--muted)">Built with plain HTML, CSS and a tiny JS. No frameworks required.</p>
+            <ul style="margin:0;padding-left:18px;color:var(--muted)">
+              <li>Editable sections</li>
+              <li>Contact form (front-end only)</li>
+              <li>Mobile friendly</li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+
+      <section id="features" class="grid">
+        <div class="card">
+          <h3>Design</h3>
+          <p>Clean visual hierarchy, readable type sizes and comfortable spacing so your content shines.</p>
+        </div>
+        <div class="card">
+          <h3>Performance</h3>
+          <p>Single-file approach keeps requests minimal — easy to host anywhere (GitHub Pages, Netlify).</p>
+        </div>
+        <div class="card">
+          <h3>Accessibility</h3>
+          <p>Keyboard-focusable controls, semantic markup, and good color contrast to help users and search engines.</p>
+        </div>
+      </section>
+
+      <section id="work" style="margin-bottom:32px">
+        <div class="card">
+          <h3>Example project</h3>
+          <p style="color:var(--muted);margin-top:8px">Showcase a project with an image on the left and description on the right. Replace this text with your project details and a link.</p>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <h3>Contact</h3>
+        <p style="color:var(--muted);margin-bottom:12px">This contact form is front-end only — connect it to your backend or a service like Formspree to collect messages.</p>
+        <form onsubmit="handleSubmit(event)">
+          <input name="name" type="text" placeholder="Your name" required />
+          <input name="email" type="email" placeholder="you@example.com" required />
+          <textarea name="message" rows="5" placeholder="Message" required></textarea>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button type="submit">Send message</button>
+            <div id="formStatus" style="color:var(--muted);font-size:14px"></div>
+          </div>
+        </form>
+      </section>
+
+    </main>
+
+    <footer>
+      <div style="opacity:0.9">© <span id="year"></span> DG Studio — Built with ❤️</div>
+    </footer>
+
+    <!-- Mobile nav sheet -->
+    <div class="mobile-nav-sheet" id="mobileNav" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>Menu</strong>
+          <button id="closeNav" style="background:transparent;border:0;color:var(--muted)">Close</button>
+        </div>
+        <a href="#features" onclick="closeNav()">Features</a>
+        <a href="#work" onclick="closeNav()">Work</a>
+        <a href="#contact" onclick="closeNav()">Contact</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tiny JS for interactivity -->
+  <script>
+    // Fill year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile nav
+    const openBtn = document.getElementById('openNav');
+    const closeBtn = document.getElementById('closeNav');
+    const mobileNav = document.getElementById('mobileNav');
+
+    function openNav(){
+      mobileNav.style.display = 'flex';
+      mobileNav.setAttribute('aria-hidden','false');
+      openBtn.setAttribute('aria-expanded','true');
+    }
+    function closeNav(){
+      mobileNav.style.display = 'none';
+      mobileNav.setAttribute('aria-hidden','true');
+      openBtn.setAttribute('aria-expanded','false');
+    }
+    if(openBtn){openBtn.addEventListener('click', openNav)}
+    if(closeBtn){closeBtn.addEventListener('click', closeNav)}
+
+    // Simple form handler (front-end only)
+    function handleSubmit(e){
+      e.preventDefault();
+      const form = e.target;
+      const status = document.getElementById('formStatus');
+      status.textContent = 'Sending...';
+      // Example: show success and clear form (replace this with real submit)
+      setTimeout(()=>{
+        status.textContent = 'Message sent — thank you! (Demo only)';
+        form.reset();
+      }, 700);
+    }
+
+    // Close nav when clicking outside panel
+    document.getElementById('mobileNav').addEventListener('click', function(e){
+      if(e.target === this) closeNav();
+    });
+  </script>
+</body>
+</html>
